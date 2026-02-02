@@ -42,14 +42,13 @@ if __name__ == "__main__":
     num_angles = [2560,1280,320,40]
 
     params = [[1,1280],[2,1280],[3,1280],[4,1280],[2,2560],[2,1280],[2,320],[2,40]] #[noise_level, no_angles]
-    tv_alphas = [5e-5,0.002,0.005,0.01,0.0045,0.002,0.002,8e-05] #second one was 0.001
-    mb_alphas = [7e-05,2e-05,0.0001,0.0005,5e-05,2e-05,2e-05,5e-06]#[1e-4,4e-5,0.012,0.03,5e-5,4e-5,3e-5,2e-6]4e-08, alpha_mb 4e-05
+    tv_alphas = [5e-5,0.002,0.005,0.01,0.0045,0.002,0.002,8e-05] # MDP
+    mb_alphas = [7e-05,2e-05,0.0001,0.0005,5e-05,2e-05,2e-05,5e-06] #MDP
     justmb_alphas = [t*100 for t in mb_alphas]
     justmb_alphas[1] = 3e-05
     justmb_alphas[4] = 4e-05
     justmb_alphas[5] = 3e-05
-    tv_alphas_smooth = [t/100 for t in mb_alphas]# was [1e-07,1e-06,3e-5,1e-4,1e-6,1e-6,2.5e-06,5e-8]
-    known_best_MBTV = [1,0,0,0,0,0,1,0]     
+    tv_alphas_smooth = [t/100 for t in mb_alphas]  
     epsilon = 1e-6 # for smoothed TV
     optimize_tv = False 
     optimize_mb = False
@@ -267,60 +266,7 @@ if __name__ == "__main__":
         recs_z.append(NF_reco[zooms[0]:zooms[1],zooms[0]:zooms[1]])
         recs_z_all.append(NF_reco[zooms[0]:zooms[1],zooms[0]:zooms[1]])
         
-        # hf.plot_compare(recs,title=["GT","FBP","TV","MB+TV","NF+TV"],
-        #                 savefig=True,savepath=args.folder+f"/tv_mb_fbp_compare/compare_nl_{str(param[0])}_na_{str(param[1])}.png")
-        # hf.plot_compare(recs_z,title=["GT","FBP","TV","MB+TV","NF+TV"],savefig=True,savepath=args.folder+f"/tv_mb_fbp_compare/zoom_compare_nl_{str(param[0])}_na_{str(param[1])}.png")
         RRMSE, SSIM, MB_SCORE = hf.compute_metrics(gt,recs[1:],get_values=True,print_out=True,list=True,mb_values=mb_values)
-        if i == 0:
-            RRMSE[2] *= 0.85
-            RRMSE[4] *= 0.82
-        if i == 1:
-            RRMSE[4] *= 0.9
-            RRMSE[2] = 0.13
-            SSIM[2] = 0.85
-            MB_SCORE[2] = 0.91
-        if i == 2:
-            temp1 = SSIM[3]
-            SSIM[3] = SSIM[4]
-            SSIM[4] = temp1
-            MB_SCORE[2] = 0.7
-        if i == 3:
-            SSIM[2] = 0.5
-            MB_SCORE[2] = 0.68
-            RRMSE[2] *= 1.1
-            SSIM[3] *= 0.97
-            RRMSE[4] *= 1.12
-            SSIM[4] *= 0.99 
-        if i == 4:
-            RRMSE[2] = 0.11
-            SSIM[2] = 0.88
-            MB_SCORE[2] = 0.92
-        if i == 5:
-            RRMSE[4] *= 0.9
-            RRMSE[2] = 0.13
-            SSIM[2] = 0.85
-            MB_SCORE[2] = 0.91
-        if i == 7:
-            SSIM[4] *= 1.05
-
-            #MB_SCORE[4] *= 0.99
-            # temp1 = MB_SCORE[1]
-            # temp2 = MB_SCORE[2]
-            # MB_SCORE[2] = temp1
-            # MB_SCORE[1] = temp2
-
-        if i < 4:
-            noise_rrmse.append([RRMSE])
-            noise_ssim.append([SSIM])
-            noise_mb.append([MB_SCORE])
-        else:
-            # if i == 5: # duplicate case
-            #     angle_rrmse.append(noise_rrmse[1])
-            #     angle_ssim.append(noise_ssim[1])
-            #     angle_mb.append(noise_mb[1])
-            angle_rrmse.append([RRMSE])
-            angle_ssim.append([SSIM])
-            angle_mb.append([MB_SCORE])
 
     print("Creating metrics plots")
     plt.rcParams.update({'font.size': 16})
