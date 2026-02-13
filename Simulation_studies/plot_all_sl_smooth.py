@@ -315,10 +315,6 @@ if __name__ == "__main__":
     plt.semilogy(num_angles,np.squeeze(np.array(angle_rrmse))[:,2],'--o',label="MB")
     plt.semilogy(num_angles,np.squeeze(np.array(angle_rrmse))[:,3],'--o',label="MB+TV")
     nnf = np.squeeze(np.array(angle_rrmse))[:,4]
-    t1 = nnf[0]
-    t2 = nnf[1]
-    nnf[1] = t1
-    nnf[0] = t2
     plt.semilogy(num_angles,nnf,'--o',label="NF+TV")
     plt.legend(fontsize="x-small")
     plt.xlabel("No. of angles")
